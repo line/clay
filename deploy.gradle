@@ -1,0 +1,64 @@
+apply plugin: "com.github.dcendents.android-maven"
+apply plugin: "com.jfrog.bintray"
+
+def siteUrl = 'https://github.com/line/clay'      // Homepage URL of the library
+def gitUrl = 'https://github.com/line/clay.git'   // Git repository URL
+
+group = "com.linecorp"
+
+//create the local.properties for bintray account
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name "$group:$POM_ARTIFACT_ID"
+                description = "Clay is an Android library project that provides image trimming"
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name "The Apache Software License, Version 2.0"
+                        url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id "wangyung"
+                        name "Freddie Wang"
+                        email "wangyung@gmail.com"
+                    }
+                    //TODO add more developers later
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "clay"
+        // it is the name that appears in bintray when logged
+        name = "$group:$POM_ARTIFACT_ID"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
