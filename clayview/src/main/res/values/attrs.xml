@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 LINE Corporation. All rights Reserved.
+  ~ LINE Corporation PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  -->
+
+<resources>
+  <declare-styleable name="ClayView">
+    <attr name="strokeWidth" format="dimension" />
+    <attr name="endPointRadius" format="dimension" />
+    <attr name="edgeDetect" format="boolean" />
+    <attr name="strokeColor" format="color" />
+    <attr name="controlPointColor" format="color" />
+  </declare-styleable>
+</resources>

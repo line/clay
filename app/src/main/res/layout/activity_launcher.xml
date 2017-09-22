@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017 LINE Corporation. All rights Reserved.
+  ~ LINE Corporation PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  -->
+
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:paddingLeft="8dp"
+  android:paddingRight="8dp"
+  tools:context="com.linecorp.clay.example.LauncherActivity">
+
+  <android.support.constraint.Guideline
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_guideline"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.5" />
+
+  <Button
+    android:id="@+id/use_xml"
+    android:text="@string/use_xml"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:textAllCaps="false"
+    app:layout_constraintVertical_bias="0.5"
+    app:layout_constraintBottom_toTopOf="@id/layout_guideline"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"/>
+
+  <Button
+    android:id="@+id/use_anko"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="@string/use_anko"
+    android:layout_marginTop="8dp"
+    android:textAllCaps="false"
+    app:layout_constraintTop_toTopOf="@id/layout_guideline"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

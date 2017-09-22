@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">Clay Example</string>
+  <string name="use_anko">Use Anko (from Gallery)</string>
+  <string name="use_xml">Use xml</string>
+  <string name="undo">Undo</string>
+  <string name="trim">Trim</string>
+</resources>
