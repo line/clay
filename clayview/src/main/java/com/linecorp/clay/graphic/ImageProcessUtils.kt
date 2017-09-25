@@ -63,15 +63,18 @@ fun getPathBoundsArea(path: Path): Int {
  * Get crop image by path
  * @param source Source bitmap
  * @param path Path
+ * @param validRect The valid rect. The outside of valid rect would not be cropped even it is inside the path
  * @param antiAlias enable antiAlias if set true
  * @return New cropped bitmap.
  */
 fun cropImage(source: Bitmap, path: Path, antiAlias: Boolean): Bitmap {
     val selectedRectOnBitmap = getPathBounds(path)
+    val selectedRectWidth = Math.min(selectedRectOnBitmap.width(), source.width)
+    val selectedRectHeight = Math.min(selectedRectOnBitmap.height(), source.height)
     selectedRectOnBitmap.left = Math.max(selectedRectOnBitmap.left, 0)
     selectedRectOnBitmap.top = Math.max(selectedRectOnBitmap.top, 0)
-    selectedRectOnBitmap.right = Math.min(selectedRectOnBitmap.right, source.width)
-    selectedRectOnBitmap.bottom = Math.min(selectedRectOnBitmap.bottom, source.height)
+    selectedRectOnBitmap.right = selectedRectOnBitmap.left + selectedRectWidth
+    selectedRectOnBitmap.bottom = selectedRectOnBitmap.top + selectedRectHeight
     val croppedDstImage = Bitmap.createBitmap(selectedRectOnBitmap.width(),
                                               selectedRectOnBitmap.height(),
                                               Bitmap.Config.ARGB_8888)

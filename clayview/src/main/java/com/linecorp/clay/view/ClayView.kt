@@ -194,7 +194,8 @@ class ClayView : BaseTransformableView {
             bitmap?.let { srcBitmap ->
                 val selectedPathOnBitmap = Path(currentDrawingPath.path)
                 selectedPathOnBitmap.transform(getInvertMatrix(theDisplayMatrix))
-                return cropImage(source = srcBitmap, path = selectedPathOnBitmap, antiAlias = antiAlias)
+                return cropImage(source = srcBitmap, path = selectedPathOnBitmap,
+                                 antiAlias = antiAlias)
             }
         }
         return null
