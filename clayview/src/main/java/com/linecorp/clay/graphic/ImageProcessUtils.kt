@@ -73,8 +73,8 @@ fun cropImage(source: Bitmap, path: Path, antiAlias: Boolean): Bitmap {
     val selectedRectHeight = Math.min(selectedRectOnBitmap.height(), source.height)
     selectedRectOnBitmap.left = Math.max(selectedRectOnBitmap.left, 0)
     selectedRectOnBitmap.top = Math.max(selectedRectOnBitmap.top, 0)
-    selectedRectOnBitmap.right = selectedRectOnBitmap.left + selectedRectWidth
-    selectedRectOnBitmap.bottom = selectedRectOnBitmap.top + selectedRectHeight
+    selectedRectOnBitmap.right = Math.min(selectedRectOnBitmap.left + selectedRectWidth, source.width)
+    selectedRectOnBitmap.bottom = Math.min(selectedRectOnBitmap.top + selectedRectHeight, source.height)
     val croppedDstImage = Bitmap.createBitmap(selectedRectOnBitmap.width(),
                                               selectedRectOnBitmap.height(),
                                               Bitmap.Config.ARGB_8888)
