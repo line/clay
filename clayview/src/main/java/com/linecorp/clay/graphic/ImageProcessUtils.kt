@@ -6,6 +6,7 @@
 package com.linecorp.clay.graphic
 
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.util.Log
 
 const private val ANGLE = 180 / Math.PI
@@ -50,9 +51,26 @@ fun getPathBounds(path: Path): Rect {
 }
 
 /**
- * Get bound area of the path
+ * Get the inside bounds on a bitmap by the path, the max bounds is the dimension of the bitmap
+ * @param path The path on the bitmap
+ * @param bitmap The bitmap
+ * @return The rect of the path
+ */
+fun getPathBoundsOnBitmap(path: Path, bitmap: Bitmap): Rect {
+    val selectedRectOnBitmap = getPathBounds(path)
+    val selectedRectWidth = Math.min(selectedRectOnBitmap.width(), bitmap.width)
+    val selectedRectHeight = Math.min(selectedRectOnBitmap.height(), bitmap.height)
+    selectedRectOnBitmap.left = Math.max(selectedRectOnBitmap.left, 0)
+    selectedRectOnBitmap.top = Math.max(selectedRectOnBitmap.top, 0)
+    selectedRectOnBitmap.right = Math.min(selectedRectOnBitmap.left + selectedRectWidth, bitmap.width)
+    selectedRectOnBitmap.bottom = Math.min(selectedRectOnBitmap.top + selectedRectHeight, bitmap.height)
+    return selectedRectOnBitmap
+}
+
+/**
+ * Get bound area of the drawingPath
  * @param path Path
- * @return the area of this path
+ * @return the area of this drawingPath
  */
 fun getPathBoundsArea(path: Path): Int {
     val rect = getPathBounds(path)
@@ -63,27 +81,22 @@ fun getPathBoundsArea(path: Path): Int {
  * Get crop image by path
  * @param source Source bitmap
  * @param path Path
- * @param validRect The valid rect. The outside of valid rect would not be cropped even it is inside the path
  * @param antiAlias enable antiAlias if set true
+ * @param padding add padding for cropped image
  * @return New cropped bitmap.
  */
-fun cropImage(source: Bitmap, path: Path, antiAlias: Boolean): Bitmap {
-    val selectedRectOnBitmap = getPathBounds(path)
-    val selectedRectWidth = Math.min(selectedRectOnBitmap.width(), source.width)
-    val selectedRectHeight = Math.min(selectedRectOnBitmap.height(), source.height)
-    selectedRectOnBitmap.left = Math.max(selectedRectOnBitmap.left, 0)
-    selectedRectOnBitmap.top = Math.max(selectedRectOnBitmap.top, 0)
-    selectedRectOnBitmap.right = Math.min(selectedRectOnBitmap.left + selectedRectWidth, source.width)
-    selectedRectOnBitmap.bottom = Math.min(selectedRectOnBitmap.top + selectedRectHeight, source.height)
-    val croppedDstImage = Bitmap.createBitmap(selectedRectOnBitmap.width(),
-                                              selectedRectOnBitmap.height(),
+fun cropImage(source: Bitmap, path: Path, antiAlias: Boolean, padding: Int): Bitmap {
+    val selectedRectOnBitmap = getPathBoundsOnBitmap(path, source)
+    val croppedDstImage = Bitmap.createBitmap(selectedRectOnBitmap.width() + 2 * padding,
+                                              selectedRectOnBitmap.height() + 2 * padding,
                                               Bitmap.Config.ARGB_8888)
     val canvas = Canvas(croppedDstImage)
     val pathPaint = Paint()
     if (antiAlias) {
         pathPaint.flags = Paint.ANTI_ALIAS_FLAG
     }
-    canvas.translate(-selectedRectOnBitmap.left.toFloat(), -selectedRectOnBitmap.top.toFloat())
+    canvas.translate(-(selectedRectOnBitmap.left.toFloat() - padding / 2),
+                     -(selectedRectOnBitmap.top.toFloat() - padding / 2))
     canvas.drawPath(path, pathPaint)
     pathPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
     canvas.drawBitmap(source, selectedRectOnBitmap, selectedRectOnBitmap, pathPaint)

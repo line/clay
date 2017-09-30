@@ -15,6 +15,7 @@ import com.linecorp.clay.example.utils.resampleBitmap
 import com.linecorp.clay.view.ClayView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
+import org.jetbrains.anko.sdk25.listeners.onCheckedChange
 import org.jetbrains.anko.sdk25.listeners.onClick
 
 class MainAnkoActivity : Activity() {
@@ -31,16 +32,16 @@ class MainAnkoActivity : Activity() {
 }
 
 class MainAnkoActivityUi(val imagePath: String) : AnkoComponent<MainAnkoActivity> {
-    lateinit var mView: ClayView
+    lateinit var clayView: ClayView
 
     override fun createView(ui: AnkoContext<MainAnkoActivity>) = with(ui) {
         relativeLayout {
             backgroundColor = ctx.resources.getColor(R.color.grey_777777)
-            mView = clayEditView {
+            clayView = clayEditView {
                 pathStrokeWidth = dip(6).toFloat()
                 endPointRadius = dip(20).toFloat()
-                controlPointColor = ui.ctx.resources.getColor(android.R.color.holo_red_dark)
-                pathStrokeColor = ui.ctx.resources.getColor(R.color.orange_ffcc80)
+                controlPointColor = ui.ctx.resources.getColor(android.R.color.holo_green_dark)
+                pathStrokeColor = ui.ctx.resources.getColor(android.R.color.white)
                 doAsync {
                     val screenDimension = owner.screenDimension()
                     val bitmap = resampleBitmap(imagePath, screenDimension.x, screenDimension.y)
@@ -55,13 +56,19 @@ class MainAnkoActivityUi(val imagePath: String) : AnkoComponent<MainAnkoActivity
                 button {
                     textResource = R.string.undo
                     onClick {
-                        mView.undoSelect()
+                        clayView.undoSelect()
                     }
                 }
                 button {
                     textResource = R.string.trim
                     onClick {
                         displayCroppedImage(ui)
+                    }
+                }
+                checkBox {
+                    textResource = R.string.showPath
+                    onCheckedChange { _, isChecked ->
+                        clayView.drawPathOnCroppedImage = isChecked
                     }
                 }
             }.lparams {
@@ -72,7 +79,7 @@ class MainAnkoActivityUi(val imagePath: String) : AnkoComponent<MainAnkoActivity
     }
 
     private fun displayCroppedImage(ui: AnkoContext<MainAnkoActivity>) {
-        mView.getCroppedImage(antiAlias = true)?.let { trimmedImage ->
+        clayView.getCroppedImage(antiAlias = true)?.let { trimmedImage ->
             doAsync {
                 val tempFile = ui.owner.createTempImageFile(trimmedImage)
                 uiThread {

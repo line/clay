@@ -19,10 +19,12 @@ import com.linecorp.clay.view.DrawingPath
  * Path selection drawable, if highlight, it draws clear inside the path and draw mask outside
  * If not highlight, it just draw the path
  */
-internal class PathSelectDrawable(var drawingPath: DrawingPath, @ColorInt maskColor: Int) : Drawable() {
+internal class PathSelectDrawable(var drawingPath: DrawingPath,
+                                  @ColorInt maskColor: Int,
+                                  private val selectedPathDrawable: PathDrawable =
+                                          PathDrawable(drawingPath.path)) :
+        Drawable(), PathDrawableProperties by selectedPathDrawable {
 
-    private val selectedPathPaint = createDefaultStrokePaint(Color.WHITE)
-    private val selectedPathBorderPaint = createDefaultStrokePaint(Color.BLACK)
     private val pathInsidePaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         color = Color.TRANSPARENT
@@ -42,36 +44,12 @@ internal class PathSelectDrawable(var drawingPath: DrawingPath, @ColorInt maskCo
         }
         get() = mask.bounds
 
-    var strokeWidth: Float
+    override var strokeWidth: Float
         set(value) {
-            selectedPathPaint.strokeWidth = value
-            selectedPathBorderPaint.strokeWidth = value + 2 * strokeBorderWidth
-            selectedPathPaint.pathEffect = CornerPathEffect(value)
-
+            selectedPathDrawable.strokeWidth = value
             moldControlPointDrawable.radius = value
         }
-        get() = selectedPathPaint.strokeWidth
-
-    private var _strokeBorderWidth = 1f
-
-    var strokeBorderWidth: Float
-        set(value) {
-            _strokeBorderWidth = value
-            selectedPathBorderPaint.strokeWidth = strokeWidth + 2 * _strokeBorderWidth
-        }
-        get() = _strokeBorderWidth
-
-    var strokeBorderColor: Int
-        set(@ColorInt value) {
-            selectedPathBorderPaint.color = value
-        }
-        get() = selectedPathBorderPaint.color
-
-    var strokeColor: Int
-        set(@ColorInt value) {
-            selectedPathPaint.color = value
-        }
-        get() = selectedPathPaint.color
+        get() = selectedPathDrawable.strokeWidth
 
     var controlPointColor: Int
         set(@ColorInt value) {
@@ -80,6 +58,9 @@ internal class PathSelectDrawable(var drawingPath: DrawingPath, @ColorInt maskCo
         get() = moldControlPointDrawable.color
 
     init {
+        if (selectedPathDrawable.path != drawingPath.path) {
+            throw IllegalArgumentException("the path of selectedPathDrawable must be the same as drawingPath.path")
+        }
         strokeWidth = DEFAULT_STROKE_WIDTH
         strokeBorderWidth = DEFAULT_BORDER_WIDTH
     }
@@ -95,8 +76,7 @@ internal class PathSelectDrawable(var drawingPath: DrawingPath, @ColorInt maskCo
         }
         //on some device, it might draw a point on (0, 0) with the selectedPathPaint even the path is empty....
         if (!drawingPath.isEmpty) {
-            canvas?.drawPath(drawingPath.path, selectedPathBorderPaint)
-            canvas?.drawPath(drawingPath.path, selectedPathPaint)
+            selectedPathDrawable.draw(canvas)
             if (drawingPath.isClosed) {
                 drawingPath.controlPoints.forEach { point ->
                     moldControlPointDrawable.point = point
