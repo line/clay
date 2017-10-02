@@ -51,6 +51,6 @@
       android:id="@+id/show_path"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/showPath" />
+      android:text="@string/show_path" />
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

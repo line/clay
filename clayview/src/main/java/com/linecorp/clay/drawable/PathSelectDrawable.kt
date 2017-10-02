@@ -19,11 +19,12 @@ import com.linecorp.clay.view.DrawingPath
  * Path selection drawable, if highlight, it draws clear inside the path and draw mask outside
  * If not highlight, it just draw the path
  */
-internal class PathSelectDrawable(var drawingPath: DrawingPath,
-                                  @ColorInt maskColor: Int,
-                                  private val selectedPathDrawable: PathDrawable =
-                                          PathDrawable(drawingPath.path)) :
-        Drawable(), PathDrawableProperties by selectedPathDrawable {
+internal class PathSelectDrawable(
+        var drawingPath: DrawingPath,
+        @ColorInt maskColor: Int,
+        private val selectedPathDrawable: PathDrawable =
+        PathDrawable(drawingPath.path)) : Drawable(),
+        PathDrawableProperties by selectedPathDrawable {
 
     private val pathInsidePaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)

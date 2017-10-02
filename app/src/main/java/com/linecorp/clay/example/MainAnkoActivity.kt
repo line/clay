@@ -66,7 +66,7 @@ class MainAnkoActivityUi(val imagePath: String) : AnkoComponent<MainAnkoActivity
                     }
                 }
                 checkBox {
-                    textResource = R.string.showPath
+                    textResource = R.string.show_path
                     onCheckedChange { _, isChecked ->
                         clayView.drawPathOnCroppedImage = isChecked
                     }

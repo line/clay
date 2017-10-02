@@ -206,11 +206,11 @@ class ClayView : BaseTransformableView {
                 val croppedImage = cropImage(source = srcBitmap, path = selectedPathOnBitmap,
                         antiAlias = antiAlias, padding = padding)
                 if (drawPathOnCroppedImage) {
-                    val tranlateMatrix = Matrix()
+                    val translateMatrix = Matrix()
                     val selectedBounds = getPathBoundsOnBitmap(selectedPathOnBitmap, srcBitmap)
-                    tranlateMatrix.setTranslate(-(selectedBounds.left.toFloat() - padding),
+                    translateMatrix.setTranslate(-(selectedBounds.left.toFloat() - padding),
                             -(selectedBounds.top.toFloat() - padding))
-                    selectedPathOnBitmap.transform(tranlateMatrix)
+                    selectedPathOnBitmap.transform(translateMatrix)
                     addPathOnCroppedImage(selectedPathOnBitmap, croppedImage)
                 }
 
