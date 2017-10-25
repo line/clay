@@ -49,7 +49,7 @@ class ImageProcessUtilsTest {
     @Test
     @Throws(Exception::class)
     fun testPathBounds() {
-        var path = createExamplePath(100f, 100f)
+        val path = createExamplePath(100f, 100f)
         val pathRect = getPathBounds(path)
 
         assertThat(pathRect.left, equalTo(0))
@@ -60,13 +60,44 @@ class ImageProcessUtilsTest {
 
     @Test
     @Throws(Exception::class)
-    fun testCropImage() {
+    fun testPathBoundsOnBitmap() {
+        val path1 = createExamplePath(50f, 50f)
+        val bitmap = createSampleGradientBitmap()
+        val pathRect1 = getPathBoundsOnBitmap(path1, bitmap)
+
+        assertThat(pathRect1.left, equalTo(0))
+        assertThat(pathRect1.top, equalTo(0))
+        assertThat(pathRect1.right, equalTo(50))
+        assertThat(pathRect1.bottom, equalTo(50))
+
+        val path2 = createExamplePath(200f, 200f)
+        val pathRect2 = getPathBoundsOnBitmap(path2, bitmap)
+
+        assertThat(pathRect2.left, equalTo(0))
+        assertThat(pathRect2.top, equalTo(0))
+        assertThat(pathRect2.right, equalTo(100))
+        assertThat(pathRect2.bottom, equalTo(100))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun testCropImageWithoutPadding() {
         val bitmap = createSampleGradientBitmap()
         val path = createExamplePath(50f, 50f)
 
         val croppedImage = Bitmap.createBitmap(bitmap, 0, 0, 50, 50)
-        val croppedImageFromPath = cropImage(bitmap, path, false)
+        val croppedImageFromPath = cropImage(bitmap, path, false, 0)
         assertThat(croppedImage.sameAs(croppedImageFromPath), equalTo(true))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun testCropImageWithPadding() {
+        val bitmap = createSampleGradientBitmap()
+        val path = createExamplePath(50f, 50f)
+        val croppedImageFromPath = cropImage(bitmap, path, false, 10)
+        assertThat(croppedImageFromPath.width, equalTo(70))
+        assertThat(croppedImageFromPath.height, equalTo(70))
     }
 
     @Test

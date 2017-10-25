@@ -4,4 +4,5 @@
   <string name="use_xml">Use xml</string>
   <string name="undo">Undo</string>
   <string name="trim">Trim</string>
+  <string name="show_path">Show path after trimming</string>
 </resources>

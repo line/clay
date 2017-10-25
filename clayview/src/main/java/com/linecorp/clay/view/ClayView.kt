@@ -23,10 +23,12 @@ import com.linecorp.clay.Style.Color.Companion.LINE_GREEN
 import com.linecorp.clay.Style.Companion.DEFAULT_STROKE_WIDTH
 import com.linecorp.clay.Style.Companion.DEFAULT_STROKE_WIDTH_FOR_POINT
 import com.linecorp.clay.Style.Companion.TOUCH_INDICATOR_POINT_RADIUS_DP
+import com.linecorp.clay.drawable.PathDrawable
 import com.linecorp.clay.drawable.PathSelectDrawable
 import com.linecorp.clay.drawable.PointIndicatorDrawable
 import com.linecorp.clay.graphic.*
 import com.linecorp.clay.graphic.model.EdgeMap
+import com.linecorp.clay.view.effect.PathEffect
 import com.linecorp.clay.view.state.*
 import java.util.ArrayList
 
@@ -101,6 +103,7 @@ class ClayView : BaseTransformableView {
         get() = startPointDrawable.radius
 
     private var enableEdgeDetect = false
+
     /**
      * Boolean that enable edge detection (experiment), the default is false
      */
@@ -109,6 +112,11 @@ class ClayView : BaseTransformableView {
             enableEdgeDetect = value
         }
         get() = enableEdgeDetect
+
+    /**
+     * Boolean that enable drawing the path on the cropped image, the default is false
+     */
+    var drawPathOnCroppedImage: Boolean = false
 
     private var selectionDrawable: PathSelectDrawable
     private var startPointDrawable: PointIndicatorDrawable
@@ -192,13 +200,35 @@ class ClayView : BaseTransformableView {
     fun getCroppedImage(antiAlias: Boolean): Bitmap? {
         if (isSelectionFinished) {
             bitmap?.let { srcBitmap ->
+                val padding = (selectionDrawable.strokeWidth / resources.displayMetrics.density / 2).toInt()
                 val selectedPathOnBitmap = Path(currentDrawingPath.path)
                 selectedPathOnBitmap.transform(getInvertMatrix(theDisplayMatrix))
-                return cropImage(source = srcBitmap, path = selectedPathOnBitmap,
-                                 antiAlias = antiAlias)
+                val croppedImage = cropImage(source = srcBitmap, path = selectedPathOnBitmap,
+                        antiAlias = antiAlias, padding = padding)
+                if (drawPathOnCroppedImage) {
+                    val translateMatrix = Matrix()
+                    val selectedBounds = getPathBoundsOnBitmap(selectedPathOnBitmap, srcBitmap)
+                    translateMatrix.setTranslate(-(selectedBounds.left.toFloat() - padding),
+                            -(selectedBounds.top.toFloat() - padding))
+                    selectedPathOnBitmap.transform(translateMatrix)
+                    addPathOnCroppedImage(selectedPathOnBitmap, croppedImage)
+                }
+
+                return croppedImage
             }
         }
         return null
+    }
+
+    private fun addPathOnCroppedImage(path: Path, bitmap: Bitmap) {
+        val pathDrawable = PathDrawable(path).apply {
+            strokeWidth = Math.max(selectionDrawable.strokeWidth / resources.displayMetrics.density, 1f)
+            strokeBorderWidth = Math.max(selectionDrawable.strokeBorderWidth
+                    / resources.displayMetrics.density, 1f)
+            strokeBorderColor = selectionDrawable.strokeBorderColor
+            strokeColor = selectionDrawable.strokeColor
+        }
+        PathEffect(pathDrawable).applyTo(bitmap)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

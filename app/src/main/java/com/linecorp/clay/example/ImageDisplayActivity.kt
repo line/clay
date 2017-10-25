@@ -32,7 +32,7 @@ class ImageDisplayActivityUi(val imagePath: String) : AnkoComponent<ImageDisplay
                         imageBitmap = bitmap
                     }
                 }
-            }.lparams(width = 600, height = 600) {
+            }.lparams(width = 720, height = 1280) {
                 centerInParent()
             }
         }

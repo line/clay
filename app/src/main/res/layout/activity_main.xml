@@ -24,8 +24,8 @@
     android:src="@drawable/test"
     app:strokeWidth="6dp"
     app:endPointRadius="20dp"
-    app:controlPointColor="@android:color/holo_red_dark"
-    app:strokeColor="@color/orange_ffcc80"
+    app:controlPointColor="@android:color/holo_green_dark"
+    app:strokeColor="@android:color/white"
     tools:layout_editor_absoluteY="8dp"
     tools:layout_editor_absoluteX="8dp" />
 
@@ -47,5 +47,10 @@
       android:text="@string/trim"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content" />
+    <CheckBox
+      android:id="@+id/show_path"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/show_path" />
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>
