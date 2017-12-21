@@ -1,0 +1,62 @@
+#Referece: https://stackoverflow.com/questions/42731625/travis-ci-failed-because-cannot-accept-license-constrain-layout/42736695#42736695
+language: android
+jdk: oraclejdk8
+sudo: required
+
+before_cache:
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/modules-2/modules-2.lock # Avoid to repack it due locks
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/classAnalysis/classAnalysis.lock
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/jarSnapshots/jarSnapshots.lock
+
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
+
+notifications:
+  email: false
+
+android:
+  components:
+    - build-tools-25.0.3
+    - android-25
+    - extra-android-support
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - sys-img-armeabi-v7a-android-25
+
+env:
+  global:
+    - DIR=clay # Library directory
+    - API=25 # Android API level 25 by default
+    - TAG=google_apis # Google APIs by default, alternatively use default
+    - ABI=armeabi-v7a # ARM ABI v7a by default
+    - QEMU_AUDIO_DRV=none # Disable emulator audio to avoid warning
+    - GRADLE_USER_HOME="${TRAVIS_BUILD_DIR}/gradle" # Change location for Gradle Wrapper and cache
+    - ANDROID_HOME=/usr/local/android-sdk-25.2.3 # Depends on the cookbooks version used in the VM
+    - TOOLS=${ANDROID_HOME}/tools # PATH order matters, exists more than one emulator script
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
+
+matrix:
+  include: # More Emulator API levels to build in parallel
+    - env: API=25
+  fast_finish: false
+
+before_install:
+  - export EMULATOR="system-images;android-${API};${TAG};${ABI}" # Used to install/create emulator
+  - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
+
+install:
+  # For constraint-layout
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+  - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+
+script:
+  # run assembleDebug only, because launching emulator is toooo slow.
+  - cd ${TRAVIS_BUILD_DIR} && ./gradlew assembleDebug
+
+after_script:
+  # Show tests and lint results
+  - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/outputs/androidTest-results/connected/*
+  - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/reports/lint-results.xml
