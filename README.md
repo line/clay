@@ -1,4 +1,5 @@
 # Clay
+![](https://travis-ci.org/line/clay.svg?branch=master)
 
 Clay is an Android library project that provides image trimming. Fully written in Kotlin, Clay is originally a UI component of [LINE Creators Studio](https://creator.line.me/en/studio/), a LINE app for creating LINE stickers. You can use Clay with any Android application to trim the outline of an image and create your own custom shape.
 
