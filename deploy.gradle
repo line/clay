@@ -8,7 +8,11 @@ group = "com.linecorp"
 
 //create the local.properties for bintray account
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+try {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+} catch (Exception e) {
+    print "[Warning] couldn't find local.properties. Using local.properties for bintray.user and bintray.apiKey\n"
+}
 
 install {
     repositories.mavenInstaller {
