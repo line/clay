@@ -55,7 +55,7 @@ You can find a more advanced way of using the library from the [example](https:/
 
 ## How to contribute to Clay
 
-See [CONTRIBUTE.md](CONTRIBUTE.md)
+See [CONTRIBUTE.md](https://github.com/line/clay/blob/master/CONTRIBUTING.md)
 
 ## License
 
