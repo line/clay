@@ -1,5 +1,5 @@
 # Clay
-![](https://travis-ci.org/line/clay.svg?branch=master)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16) ![build-status](https://travis-ci.org/line/clay.svg?branch=master)
 
 Clay is an Android library project that provides image trimming. Fully written in Kotlin, Clay is originally a UI component of [LINE Creators Studio](https://creator.line.me/en/studio/), a LINE app for creating LINE stickers. You can use Clay with any Android application to trim the outline of an image and create your own custom shape.
 
@@ -15,7 +15,7 @@ Click [here](https://github.com/line/clay/blob/master/screenshot/example.gif) to
 
 Use Gradle to build the library. Download it from [JCenter](https://bintray.com/bintray/jcenter) and add configurations in the build.gradle file as follows.
 
-```
+```gradle
 allprojects {
     repositories {
         jcenter()
@@ -23,7 +23,7 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.linecorp:clayview:0.1.2'
+   implementation "com.linecorp:clayview:0.1.2"
 }
 ```
 
@@ -31,7 +31,7 @@ dependencies {
 
 To get started with Clay, define its view in an XML layout file as follows.
 
-```
+```gradle
   <com.linecorp.clay.view.ClayView
     android:id="@+id/clay"
     android:src="@drawable/test2"
@@ -43,12 +43,11 @@ To get started with Clay, define its view in an XML layout file as follows.
 
 Then you can use ClayView as follows.
 
-```
+```java
 val clayView = findViewById(R.id.clay) as ClayView
 
 clayView.undoSelect() // undo
 clayView.getCroppedImage() // get the cropped image
-
 ```
 
 You can find a more advanced way of using the library from the [example](https://github.com/line/clay/tree/master/app).
