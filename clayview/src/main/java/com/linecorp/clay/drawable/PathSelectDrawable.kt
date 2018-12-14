@@ -8,7 +8,7 @@ package com.linecorp.clay.drawable
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import com.linecorp.clay.Style
 import com.linecorp.clay.Style.Companion.DEFAULT_BORDER_WIDTH
 import com.linecorp.clay.Style.Companion.DEFAULT_STROKE_WIDTH

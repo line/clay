@@ -11,7 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -23,12 +23,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.1-beta01', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':clayview')
-    compile 'com.android.support:appcompat-v7:28.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    compile 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     compile "com.github.hotchemi:permissionsdispatcher:2.2.0"
     kapt "com.github.hotchemi:permissionsdispatcher-processor:2.2.0"
     compile "org.jetbrains.anko:anko-commons:$anko_version"

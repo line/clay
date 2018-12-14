@@ -8,7 +8,7 @@ package com.linecorp.clay.graphic
 import android.graphics.*
 import org.junit.Test
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
